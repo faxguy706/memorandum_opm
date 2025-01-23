@@ -6,10 +6,15 @@ less effective in reaching and acting on any potential "real" emails.
 v1.0 January 23rd 2025
 It's a little sloppy, but it works.
 
+
 The only variables you need to change are the "email_username", "app_password", "send_limit", and send_randomized. Otherwise, it should just run.
+
 email_username: the username/email address of the sending email.
+
 app_password: the password used to log into the sending email. regular password usually doesn't work.
+
 send_limit: how many emails get sent. If send_randomized is False, rounds down to the nearest whole number divisible by the number of pre-selected names.
+
 send_randomized: A true/false option to turn on a mode that randomizes "target" information to be a combination of common first and last names, with
 randomized locations, ages, and federal departments.
 
