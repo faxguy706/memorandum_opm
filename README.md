@@ -3,9 +3,18 @@ primarily in order to clog up their snitch email.
 This idea here is to fill the DEIAtruth@opm.gov snitch hotline with bogus emails so that they are
 less effective in reaching and acting on any potential "real" emails.
 
-v1.0 January 23rd 2025
+v1.1 January 29th 2025
+
 It's a little sloppy, but it works.
 
+Changelog:
+
+v1.0 initial release with basic abilities
+
+v1.1 added iterable dictionary option so you can have this perform the same function over
+several emails per script run.
+
+Please note there is a 500-email daily limit on gmail.
 
 The only variables you need to change are the "email_username", "app_password", "send_limit", and send_randomized. Otherwise, it should just run.
 
