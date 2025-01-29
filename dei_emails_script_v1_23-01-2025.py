@@ -3,13 +3,14 @@
 # This idea here is to fill the DEIAtruth@opm.gov snitch hotline with bogus emails so that they are
 # less effective in reaching and acting on any potential "real" emails.
 #
-# v1.0 January 23rd 2025
+# v1.1 January 29th 2025
 # It's a little sloppy, but it works.
 
 # global variables you should change
-email_username = "insert_email@gmail.com"
-app_password = "insert_password"
-send_limit = 1000
+email_logins = {"emailusername@gmail.com": "app password",
+                "emailusername@gmail.com": "app password",
+                }
+send_limit = 150
 send_randomized = False
 
 
@@ -21,13 +22,8 @@ import datetime
 from email.utils import formataddr
 from email.message import EmailMessage
 
-processStartTime = datetime.datetime.now()
-
-email_count = 0
-random_count = 0
 smtp_server = "smtp.gmail.com"
 smtp_port = 587
-from_email = email_username
 to_email = ["DEIAtruth@opm.gov", "amanda.scales@opm.gov", "DEIAreports@opm.gov"]
 
 # Personalization vaiables
@@ -80,7 +76,9 @@ department = ["National Credit Union Administration", "Department of Defense", "
 subject_opener = ["Potential DEI Hire: ", "DEI Description Change: ", "Catching DEI Report: ", "OPM DEI: ",
                   "DEI Executive Orders: ", "Got someone for DEI: ", "Position Change DEI: ", "Fire them for DEI: ",
                   "DEI Ideologies: ",
-                  "Truth about DEI: ", ]
+                  "Truth about DEI: ", "Time to go DEI: ", "Get them out of here DEI: ", "This is ridiculous DEI: ",
+                  "Trying DEI on for size: ", "Report: ", "New Report: ", "That report your asked for: ",
+                  "Some information: ",]
 
 
 # Defining the message body and getting randomization involved
@@ -145,72 +143,91 @@ def message_build(first_name_set, last_name_set, age_set, workplace_set, departm
     return msg
 
 
-with smtplib.SMTP(smtp_server, smtp_port) as smtp:
-    smtp.starttls()
-    smtp.login(email_username, app_password)
+# Running on an iterable dictionary of multiple emails
+for username, password in email_logins.items():
+    print(f"Sending emails from {username} email now...")
+    processStartTime = datetime.datetime.now()
 
-    if send_randomized is True:
-        send_limit_total = send_limit
-        random_limit = len(pre_random_dict)
+    email_count = 0
+    random_count = 0
+    from_email = username
+    email_username = username
+    app_password = password
 
-    elif send_randomized is False:
-        if send_limit <= len(pre_random_dict):
-            random_limit = send_limit
-        else:
-            random_limit = (send_limit - (send_limit % len(pre_random_dict)))
-        send_limit_total = random_limit
 
-    while email_count < send_limit_total:
-        while random_count < random_limit:
+    with smtplib.SMTP(smtp_server, smtp_port) as smtp:
+        smtp.starttls()
+        smtp.login(email_username, app_password)
 
-            random_list_value = random_count % len(pre_random_dict)
+        if send_randomized is True:
+            send_limit_total = send_limit
+            random_limit = len(pre_random_dict)
 
-            first = list(pre_random_dict.keys())[random_list_value]
-            last = ""
-            age_pr = list(pre_random_dict.values())[random_list_value][0]
-            city_pr = list(pre_random_dict.values())[random_list_value][1]
-            department_pr = list(pre_random_dict.values())[random_list_value][2]
-            signee_first = random.choice(first_names_list)
-            signee_last = str(random.choice(last_names_list))
-            subject_pr = str(random.choice(subject_opener))
-
-            for i in to_email:
-                time.sleep(0.1)
-                send_message_target = message_build(first, last, age_pr, city_pr, department_pr, signee_first,
-                                                    subject_pr, i)
-
-                smtp.send_message(send_message_target)
-
-            print("Targeted emails sent!")
-            random_count += 1
-            email_count += 1
+        elif send_randomized is False:
+            if send_limit <= len(pre_random_dict):
+                random_limit = send_limit
+            else:
+                random_limit = (send_limit - (send_limit % len(pre_random_dict)))
+            send_limit_total = random_limit
 
         while email_count < send_limit_total:
-            for i in to_email:
-                time.sleep(0.1)
-                send_message_random = message_build(first_names_list, last_names_list, age, workplace, department,
-                                                    signee_names,
-                                                    subject_opener, i)
+            while random_count < random_limit:
 
-                smtp.send_message(send_message_random)
+                random_list_value = random_count % len(pre_random_dict)
 
-            print("Randomized emails sent!")
-            email_count += 1
+                first = list(pre_random_dict.keys())[random_list_value]
+                last = ""
+                age_pr = list(pre_random_dict.values())[random_list_value][0]
+                city_pr = list(pre_random_dict.values())[random_list_value][1]
+                department_pr = list(pre_random_dict.values())[random_list_value][2]
+                signee_first = random.choice(first_names_list)
+                signee_last = str(random.choice(last_names_list))
+                subject_pr = str(random.choice(subject_opener))
 
-processEndTime = datetime.datetime.now()
-print(f"\nYou just sent {email_count} unique emails to {len(to_email)} email addresses, for a total of "
-      f"{str(int(email_count) * len(to_email))} emails!\n"
-      f"This took your computer {str(processEndTime - processStartTime)} to complete.\n"
-      f"By helping to clog the gears of fascist bureaucracy with meaningless nonsense,\n"
-      f"you have committed civil disobience in search of a better world. Excellent work.\n"
-      f"Consider joining the U.S. General Strike: https://generalstrikeus.com/ \n"
-      f"or the Party for Socialism and Liberation: https://pslweb.org/ \n"
-      f"or a similar political movement to continue your actions. \n"
-      f"Remember, if a cop asks you something: you don't know anything.")
+                for i in to_email:
+                    time.sleep(0.1)
+                    send_message_target = message_build(first, last, age_pr, city_pr, department_pr, signee_first,
+                                                        subject_pr, i)
 
-# Backup code lines:
-# smtp.sendmail(from_email, i, body_text_pr)
+                    smtp.send_message(send_message_target)
 
+                print("Targeted emails sent!")
+                random_count += 1
+                email_count += 1
+
+            while email_count < send_limit_total:
+                for i in to_email:
+                    time.sleep(0.1)
+                    send_message_random = message_build(first_names_list, last_names_list, age, workplace, department,
+                                                        signee_names,
+                                                        subject_opener, i)
+
+                    smtp.send_message(send_message_random)
+
+                print("Randomized emails sent!")
+                email_count += 1
+
+    processEndTime = datetime.datetime.now()
+    print(f"\nYou just sent {email_count} unique emails to {len(to_email)} email addresses, for a total of "
+          f"{str(int(email_count) * len(to_email))} emails!\n"
+          f"This took your computer {str(processEndTime - processStartTime)} to complete.\n"
+          f"By helping to clog the gears of fascist bureaucracy with meaningless nonsense,\n"
+          f"you have committed civil disobience in search of a better world. Excellent work.\n"
+          f"Consider joining the U.S. General Strike: https://generalstrikeus.com/ \n"
+          f"or the Party for Socialism and Liberation: https://pslweb.org/ \n"
+          f"or a similar political movement to continue your actions. \n"
+          f"Remember, if a cop asks you something: you don't know anything.\n")
+
+print("All listed email addresses used for civil disobedience. Have a nice day.")
+
+
+# Changelog:
+# v1.0 initial release with basic abilities
+# v1.1 added iterable dictionary option so you can have this perform the same function over
+# several emails per script run.
+#
+# Please note there is a 500-email daily limit on gmail.
+#
 # The only variables you need to change are the "email_username", "app_password", "send_limit", and send_randomized.
 # email_username: the username/email address of the sending email.
 # app_password: the password used to log into the sending email. regular password usually doesn't work.
@@ -239,3 +256,10 @@ print(f"\nYou just sent {email_count} unique emails to {len(to_email)} email add
 # Change "send_randomized" to "False" to turn this feature off! Now it just sends targeted emails
 # against specific people in power, from the "pre_random_dict" list. The script will iterate
 # through the list of pre-selected names until it reaches your send limit.
+
+
+
+'''
+# Backup code lines:
+# smtp.sendmail(from_email, i, body_text_pr)
+'''
